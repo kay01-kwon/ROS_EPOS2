@@ -6,3 +6,12 @@ Msg info: std_msgs/Int32
 Topic to subscribe: /TargetVel
 
 Topic to publish: /ActualVel
+
+CAN Data histogram result
+
+1. Target Velocity Discrete Time histogram result
+<img src="epos2_test/picture/histogram_TargetVel.jpg">
+
+2. Actual Velocity Discrete Time histogram result
+<img src="epos2_test/picture/histogram_ActualVel.jpg">
+
