@@ -195,7 +195,7 @@ void EPOS2::CallbackTargetVelocity(const Int32::ConstPtr& TargetVelocity)
     frame.data[5] = 0x00;
     **/
     write(sock_,&frame,sizeof(can_frame));
-    sleep(0.00001);
+    sleep(0.01);
     readActualVelocity();
 }
 
