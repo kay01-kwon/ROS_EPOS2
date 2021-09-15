@@ -48,7 +48,7 @@ Subscribe topic info : TargetVel 100 Hz
 
 The below order must be followed.
 
-Request -->: get Actual Velocity data from EPOS2 driver -> Send Target Velocity data to EPOS2 driver
+Request --> get Actual Velocity data from EPOS2 driver -> Send Target Velocity data to EPOS2 driver
 
 If the protocol does not obey the order, the system could be problematic.
 
