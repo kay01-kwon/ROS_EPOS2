@@ -46,8 +46,10 @@ Subscribe topic info : TargetVel 100 Hz
 
 (1631436162.005467) slcan0 401#0F0088130000
 
-The below order must be followed. If the protocol does not obey the order, the system could be problematic.
+The below order must be followed.
 
 Request -> get Actual Velocity data from EPOS2 driver -> Send Target Velocity data to EPOS2 driver
+
+If the protocol does not obey the order, the system could be problematic.
 
 The reason why the publisher publishes its message in the callback function is to obey the order.
