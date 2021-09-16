@@ -46,6 +46,7 @@ class EPOS2{
     int sock_;
 
     int nbytes;
+    int data_prev = 0;
     struct timeval tv;
 
     ros::NodeHandle nh_;
@@ -195,7 +196,6 @@ void EPOS2::CallbackTargetVelocity(const Int32::ConstPtr& TargetVelocity)
     frame.data[5] = 0x00;
     **/
     write(sock_,&frame,sizeof(can_frame));
-    sleep(1);
     readActualVelocity();
 }
 
@@ -245,12 +245,23 @@ void EPOS2::readActualVelocity()
     //std::cout<<"Motor Velocity Read: \t";
     frame.can_id = 0x381|CAN_RTR_FLAG;
     write(sock_,&frame,sizeof(can_frame));
- 
-    nbytes = recvmsg(sock_,&can_msg,0);
-    int data = HexarrayToInt(frame_get.data,4);
-    //std::cout<<data<<std::endl;
     
-    ActualVel.data = data;
+    sleep(0.01);
+    nbytes = recvmsg(sock_,&can_msg,0);
+
+    //std::cout<<data<<std::endl;
+    // CAN ID Matching and insert data into ActualVel object
+    if (frame_get.can_id == 0x381)
+    {
+        int data = HexarrayToInt(frame_get.data,4);
+        ActualVel.data = data;
+        data_prev = data;
+    }
+    else    // When fail to receive data frame...
+    {
+        ActualVel.data = data_prev;
+    }
+    
     ActualVelocityPublisher.publish(ActualVel);
 }
 
