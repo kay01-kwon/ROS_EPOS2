@@ -22,10 +22,12 @@ Subscribe topic info : TargetVel 100 Hz
 
 4. Code Modified
 
-Firstly, check CAN ID and when the ID matches that of data we want to get, publish the data.
+Firstly, check CAN ID and when the ID matches that of data we want to get, insert the data into the object.
 
 CAN is adept at recovering error by transmitting request again when error takes place.
 
 In that sense, it is essential to check CAN id to get data.
+
+When the computer fails to get data frame, insert previous data stored.
 
 <img src="epos2_test/picture/code_CAN_ID_Check.png">
