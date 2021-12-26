@@ -46,7 +46,6 @@ class EPOS2{
     int sock_;
 
     int nbytes;
-    int data_prev = 0;
     struct timeval tv;
 
     ros::NodeHandle nh_;
@@ -55,10 +54,9 @@ class EPOS2{
 
     double t_prev = ros::Time::now().toSec();
 
-    std::string control_enable = "0F00";
-    std::string TargetVel[1];
-    std::string TargetVeldata;
     int TargetVel_;
+    int ActualVel;
+    int Actual_data;
 
 };
 
@@ -181,12 +179,21 @@ void EPOS2::CallbackTargetVelocity(const Int32::ConstPtr& TargetVelocity)
     TargetVel_ = TargetVelocity->data;
     //std::cout<<"Motor Run\n";   
 
-    TargetVel[0] = DecToHexString(TargetVel_);
-    TargetVeldata = StringAppend(control_enable,TargetVel[0]);
-    HexstringToData((char *) TargetVeldata.c_str(), frame.data,8);
-    
+    //TargetVel[0] = DecToHexString(TargetVel_);
+    //TargetVeldata = StringAppend(control_enable,TargetVel[0]);
+    //HexstringToData((char *) TargetVeldata.c_str(), frame.data,8);
+
     frame.can_id = 0x401;
     frame.can_dlc = 6;
+    frame.data[0] = 0x0F;
+    frame.data[1] = 0x00;
+
+    for (int i = 0; i < 4; i++)
+    {
+        frame.data[i+2] = unsigned((TargetVel_ >> 8*i));
+    }
+
+
     /**
     frame.data[0] = 0x0F;
     frame.data[1] = 0x00;
@@ -245,99 +252,22 @@ void EPOS2::readActualVelocity()
     //std::cout<<"Motor Velocity Read: \t";
     frame.can_id = 0x381|CAN_RTR_FLAG;
     write(sock_,&frame,sizeof(can_frame));
-    
-    sleep(0.01);
+ 
     nbytes = recvmsg(sock_,&can_msg,0);
-
+    int data = HexarrayToInt(frame_get.data,4);
     //std::cout<<data<<std::endl;
-    // CAN ID Matching and insert data into ActualVel object
-    if (frame_get.can_id == 0x381)
-    {
-        int data = HexarrayToInt(frame_get.data,4);
-        ActualVel.data = data;
-        data_prev = data;
-    }
-    else    // When fail to receive data frame...
-    {
-        ActualVel.data = data_prev;
-    }
     
+    ActualVel.data = data;
     ActualVelocityPublisher.publish(ActualVel);
 }
 
 int EPOS2::HexarrayToInt(unsigned char *buffer, int length)
 {
-    int ActualVel = 0;
-    int data = 0;
     for ( int i = 0; i < length; i++)
     {
         ActualVel +=(buffer[i]<<8*i);
-        data = (int) buffer[i];
+        Actual_data = (int) buffer[i];
         //printf("Index: %d \t data: %02x \n",i,buffer[i]);
     }
     return ActualVel;
-}
-
-template <typename T>
-std::string EPOS2::DecToHexString(T TargetVel)
-{
-    std::stringstream stream;
-    std::string s, data;
-    stream  <<std::setfill('0')
-            <<std::setw(sizeof(T)*2)
-            <<std::hex << TargetVel;
-    s = stream.str();
-    for(int i = 0; i < 4; i++)
-        data.append(s.substr(2*(3-i),2));
-    //std::cout<<data<<std::endl;
-    return data;
-}
-
-std::string EPOS2::StringAppend(std::string a,std::string b)
-{
-    std::string s;
-    s.append(a);
-    s.append(b);
-    return s;
-}
-
-unsigned char EPOS2::AscToNibble(char c)
-{
-    if ((c >= '0') && (c <= '9'))
-        return c - '0';
-
-    if ((c >= 'A') && (c <= 'F'))
-        return c - 'A' + 10;
-
-    if ((c >= 'a') && (c <= 'f'))
-        return c - 'a' + 10;
-
-    return 16;
-}
-
-int EPOS2::HexstringToData(char* arg, unsigned char* data, int MaxDataLength)
-{
-    int length = strlen(arg);
-    unsigned char tmp;
-
-    if(!length || length%2 || length > MaxDataLength*2)
-        return 1;
-
-    memset(data,0,MaxDataLength);
-
-    for(int i = 0; i < length/2; i++)
-    {
-        tmp = AscToNibble(*(arg+2*i));
-        if (tmp > 0x0F)
-            return 1;
-        data[i] = (tmp <<4);
-
-        tmp = AscToNibble(*(arg+2*i+1));
-        if(tmp > 0x0F)
-            return 1;
-
-        data[i] |= tmp;
-    }
-
-    return 0;
 }

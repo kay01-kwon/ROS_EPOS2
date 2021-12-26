@@ -16,6 +16,7 @@ int main(int argc, char** argv)
     while(ros::ok())
     {
         ros::spinOnce();
+
     }
 
     epos2_control.StopReset();
