@@ -177,12 +177,7 @@ void EPOS2::CallbackTargetVelocity(const Int32::ConstPtr& TargetVelocity)
 {
 
     TargetVel_ = TargetVelocity->data;
-    //std::cout<<"Motor Run\n";   
-
-    //TargetVel[0] = DecToHexString(TargetVel_);
-    //TargetVeldata = StringAppend(control_enable,TargetVel[0]);
-    //HexstringToData((char *) TargetVeldata.c_str(), frame.data,8);
-
+    
     frame.can_id = 0x401;
     frame.can_dlc = 6;
     frame.data[0] = 0x0F;
@@ -193,15 +188,6 @@ void EPOS2::CallbackTargetVelocity(const Int32::ConstPtr& TargetVelocity)
         frame.data[i+2] = unsigned((TargetVel_ >> 8*i));
     }
 
-
-    /**
-    frame.data[0] = 0x0F;
-    frame.data[1] = 0x00;
-    frame.data[2] = 0x10;
-    frame.data[3] = 0x10;
-    frame.data[4] = 0x00;
-    frame.data[5] = 0x00;
-    **/
     write(sock_,&frame,sizeof(can_frame));
     readActualVelocity();
 }
