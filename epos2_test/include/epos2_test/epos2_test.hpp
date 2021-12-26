@@ -177,7 +177,7 @@ void EPOS2::CallbackTargetVelocity(const Int32::ConstPtr& TargetVelocity)
 {
 
     TargetVel_ = TargetVelocity->data;
-    
+
     frame.can_id = 0x401;
     frame.can_dlc = 6;
     frame.data[0] = 0x0F;
@@ -240,20 +240,8 @@ void EPOS2::readActualVelocity()
     write(sock_,&frame,sizeof(can_frame));
  
     nbytes = recvmsg(sock_,&can_msg,0);
-    int data = HexarrayToInt(frame_get.data,4);
-    //std::cout<<data<<std::endl;
     
-    ActualVel.data = data;
+    Actual_data = ((frame_get.data[3]<<24)|(frame_get.data[2]<<16)|(frame_get.data[1]<<8)|(frame_get.data[0]));    
+    ActualVel.data = Actual_data;
     ActualVelocityPublisher.publish(ActualVel);
-}
-
-int EPOS2::HexarrayToInt(unsigned char *buffer, int length)
-{
-    for ( int i = 0; i < length; i++)
-    {
-        ActualVel +=(buffer[i]<<8*i);
-        Actual_data = (int) buffer[i];
-        //printf("Index: %d \t data: %02x \n",i,buffer[i]);
-    }
-    return ActualVel;
 }
