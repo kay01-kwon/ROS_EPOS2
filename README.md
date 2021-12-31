@@ -22,7 +22,7 @@ Subscribe topic info : TargetVel 100 Hz
 
 4. Code Modified
 
-When a function is destroyed, declared variable, also, is perished, which means that if you declare a variable in a function, the memory assigned for the variable would be destroyed frequently.
+When a function is destroyed, declared variable in the function, also, is perished, which means that if you declare a variable in a function, the memory assigned for the variable would be destroyed frequently.
 
 This makes memory efficiency decrease.
 
