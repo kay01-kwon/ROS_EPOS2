@@ -22,12 +22,8 @@ Subscribe topic info : TargetVel 100 Hz
 
 4. Code Modified
 
-Firstly, check CAN ID and when the ID matches that of data we want to get, insert the data into the object.
+When a function is destroyed, declared variable, also, is perished, which means that if you declare a variable in a function, the memory assigned for the variable would be destroyed frequently.
 
-CAN is adept at recovering error by transmitting request again when error takes place.
+This makes memory efficiency decrease.
 
-In that sense, it is essential to check CAN id to get data.
-
-When the computer fails to get data frame, insert previous data stored.
-
-<img src="epos2_test/picture/code_CAN_ID_Check.png">
+Therefore, you should declare the data to read or write in private to prevent the memory from destroying constantly.
