@@ -24,6 +24,6 @@ Subscribe topic info : TargetVel 100 Hz
 
 When a function is destroyed, declared variable in the function, also, is perished, which means that if you declare a variable in a function, the memory assigned for the variable would be destroyed frequently.
 
-This makes memory efficiency decrease.
+This makes memory inefficient.
 
 Therefore, you should declare the data to read or write in private to prevent the memory from destroying constantly.
