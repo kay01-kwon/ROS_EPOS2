@@ -245,3 +245,17 @@ void EPOS2::readActualVelocity()
     ActualVel.data = Actual_data;
     ActualVelocityPublisher.publish(ActualVel);
 }
+
+int EPOS2::HexarrayToInt(unsigned char *buffer, int length)
+{
+
+    int hextoint = 0;
+    int data = 0;
+    for(int i = 0; i < length; i++){
+        hextoint += (buffer[i] << 8*i);
+        data = (int) buffer[i];
+        //printf("Index: %d \t Data: %02x \n",i,buffer[i]);
+    }
+
+    return hextoint;
+}
