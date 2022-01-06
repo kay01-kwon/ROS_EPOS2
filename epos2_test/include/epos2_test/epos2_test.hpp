@@ -26,11 +26,6 @@ class EPOS2{
     void StopReset();
     void readActualVelocity();
     int HexarrayToInt(unsigned char *buffer, int length);
-    template< typename T >
-    std::string DecToHexString(T TargetVel);
-    std::string StringAppend(std::string a, std::string b);
-    unsigned char AscToNibble(char c);
-    int HexstringToData(char* arg, unsigned char* data, int MaxDataLength);
 
     private:
 
@@ -167,8 +162,8 @@ void EPOS2::ControlWordEnabled()
 
     setsockopt(sock_,SOL_SOCKET,SO_RCVTIMEO,(const char*)&tv,sizeof tv);
 
-    nbytes = recvmsg(sock_,&can_msg,0);
-    int data = HexarrayToInt(frame_get.data,4);
+//    nbytes = recvmsg(sock_,&can_msg,0);
+//    int data = HexarrayToInt(frame_get.data,4);
     //std::cout<<data<<std::endl;
     sleep(1);
 }

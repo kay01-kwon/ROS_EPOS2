@@ -21,3 +21,6 @@ include_directories(
 
 add_executable(epos2_test src/epos2_test.cpp)
 target_link_libraries(epos2_test ${catkin_LIBRARIES})
+
+add_executable(motor_control src/epos2_test.cpp include/epos2_test/epos2_control.cpp)
+target_link_libraries(motor_control ${catkin_LIBRARIES})
