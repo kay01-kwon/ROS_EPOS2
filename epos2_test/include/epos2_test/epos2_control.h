@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <iostream>
+#include <epos2_test/epos2_definition.h>
 
 using std_msgs::Int32;
 
@@ -27,13 +28,30 @@ class EPOS2CTRL{
     // Initiate CAN interface
     int InitiateCANInterface(const char *ifname);
 
+    // Velocity Profile Mode Set
+    void VelocityModeSet();
+
+    // Position Profile Mode Set
+    void PositionModeSet();
+
+    void ControlwordShutdown();
+
     // Callback Function
     void CallbackTargetVelocity(const Int32 & TargetVel_msg);
 
     // Control word Enable
     void ControlWordEnable();
 
-    // Read Encoder Data
+    // Request Position Value
+    void PositionRequest();
+
+    // Request Velocity Value
+    void VelocityRequest();
+
+    // Read Position Data
+    void ReadActualPosition();
+
+    // Read RPM Data
     void ReadActualVelocity();
 
     // Stop and Reset
@@ -45,12 +63,14 @@ class EPOS2CTRL{
 
     struct sockaddr_can addr;
     struct can_frame frame;
+    struct can_frame frame2;
     struct canfd_frame frame_fd;
 
     struct iovec iov;
     struct msghdr can_msg;
     char ctrlmsg[CMSG_SPACE(sizeof(struct timeval) + 3*sizeof(struct timespec) + sizeof(__u32))];
     struct canfd_frame frame_get;
+    struct canfd_frame frame_get2;
 
     int nbytes;
     int sock_;
@@ -59,13 +79,15 @@ class EPOS2CTRL{
 
     ros::NodeHandle nh_;
     ros::Publisher ActualVelocityPublisher;
+    ros::Publisher ActualPositionPublisher;
     ros::Subscriber TargetVelocitySubscriber;
 
     double last_time = ros::Time::now().toSec();
 
     int TargetVel;
-    int Actual_data;
 
+    Int32 ActualVel;
+    Int32 ActualPos;
 };
 
 #endif
