@@ -63,7 +63,6 @@ class EPOS2CTRL{
 
     struct sockaddr_can addr;
     struct can_frame frame;
-    struct can_frame frame2;
     struct canfd_frame frame_fd;
 
     struct iovec iov;
