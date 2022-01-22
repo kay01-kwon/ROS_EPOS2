@@ -23,7 +23,7 @@ EPOS2CTRL::EPOS2CTRL()
 
     tv.tv_sec = 0;
     tv.tv_usec = 0;
-
+/*8
     std::cout<<"Network Manegerment Initialization \n";
 
     frame.can_id = 0x000;
@@ -33,7 +33,7 @@ EPOS2CTRL::EPOS2CTRL()
 
     write(sock_,&frame,sizeof(can_frame));
     sleep(1);
-
+**/
     std::cout<<"Remote Mode\n";
     frame.can_id = 0x000;
     frame.can_dlc = 2;
@@ -132,8 +132,9 @@ void EPOS2CTRL::CallbackTargetVelocity(const Int32& TargetVelocity)
     PositionRequest();
     VelocityRequest();
 
-    ReadActualVelocity();
     ReadActualPosition();
+    ReadActualVelocity();
+
 }
 
 void EPOS2CTRL::ControlWordEnable()
